@@ -1,0 +1,87 @@
+<nav class="nav">
+  <div class="bg-color-black width-100%">
+    <div class="container">
+      <div class="row">
+        <ul>
+          <li><a [routerLinkActiveOptions]="{exact:true}" routerLinkActive="Active" routerLink="shop">Shop</a></li>
+          <li><a routerLinkActive="Active" routerLink="favoriets">Favoriets</a></li>
+          <li><a routerLinkActive="Active" routerLink="shopping-cart">Shopping cart</a></li>
+          <li><a routerLinkActive="Active" routerLink="profile">Profile </a></li>
+          <li><a routerLinkActive="Active" routerLink="order">Orders </a></li>
+
+          <li *ngIf="isAdmin"><a routerLink="/UserManagement" routerLinkActive="Active">Users</a></li>
+          <li *ngIf="isAdmin"><a routerLink="/orders" routerLinkActive="Active">All Orders</a></li>
+          <li *ngIf="isAdmin"><a routerLink="/stoc" routerLinkActive="Active">Stock</a></li>
+          <li *ngIf="isAdmin"><a routerLink="/dashboard" routerLinkActive="Active">Dashboard</a></li>
+
+          <li class="favorite" (click)="toggleCartDropdownFavorite()">
+            <svg class="heart" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-heart-fill" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+            </svg>
+          </li>
+          <div *ngIf="cartDropdownVisible" class="cart-dropdown">
+            <h4 class="favoriteH">Favorites</h4>
+            <div class="dropdown-container">
+              <table class="dropdown-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let itemFavorite of favoriteItems">
+                    <td>{{ itemFavorite.product.name }}</td>
+                    <td>{{ itemFavorite.product.price | currency }}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Total:</strong></td>
+                    <td><strong>{{ getTotalPriceFavorite() | currency }}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="favorites"> ({{favoriteItems.length}})</p>
+
+
+          <li class="iconaBasket" (click)="toggleCartDropdownCart()">
+            <svg class="basket" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-cart3" viewBox="0 0 16 16">
+              <path
+                d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l.84 4.479 9.144-.459L13.89 4zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+            </svg>
+          </li>
+          <div *ngIf="cartDropdownVisibleCart" class="cart-dropdown">
+            <h4 class="cart">Cart</h4>
+            <div class="dropdown-container">
+              <table class="dropdown-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of cartItems">
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product.price | currency }}</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Total:</strong></td>
+                    <td><strong>{{ getTotalPriceCart() | currency }}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="basketNumber"> ({{cartItems.length}})</p>
+
+
+          <li class="logout"><a href="#" (click)="authService.logout()">Log out</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

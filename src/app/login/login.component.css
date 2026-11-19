@@ -1,0 +1,134 @@
+body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    background: linear-gradient(45deg, #000000, #0056b3, #f8c917);
+  }
+  
+  .login-form {
+    background-color: #fff; 
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  h2 {
+    color: #0056b3; 
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  input[type="text"], input[type="password"] {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 12px;
+    font-size: 16px;
+  }
+  
+  input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #0056b3;
+    outline: none;
+  }
+  
+  button {
+    background-color: #0056b3;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #003d7d; 
+  }
+  
+  a {
+    color: #f8c917; 
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(45deg, #000000, #0056b3, #f8c917); 
+  }
+  
+  .login-form {
+    background-color: #fff; 
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  h2 {
+    color: #0056b3; 
+  }
+  
+  .form-label {
+    font-weight: bold;
+  }
+  
+  input[type="text"], input[type="password"] {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 12px;
+    font-size: 16px;
+  }
+  
+  input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #0056b3; 
+    outline: none;
+  }
+  
+  button {
+    background-color: #0056b3;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #003d7d;
+  }
+  
+  a {
+    color: #f8c917; 
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+    

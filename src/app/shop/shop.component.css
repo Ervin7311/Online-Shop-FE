@@ -1,0 +1,48 @@
+.custom-container {
+  margin-left: 105px;
+  margin-right: 105px;
+}
+
+.card-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.card-wrapper app-card {
+  flex: 0 0 calc(25% - 15px);
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+@media (max-width: 1200px) {
+  .card-wrapper app-card {
+    flex: 0 0 calc(33.33% - 10px);
+  }
+
+  .custom-container {
+    margin-left: 60px;
+    margin-right: 60px;
+  }
+}
+
+@media (max-width: 992px) {
+  .card-wrapper app-card {
+    flex: 0 0 calc(50% - 10px);
+  }
+
+  .custom-container {
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .card-wrapper app-card {
+    flex: 0 0 100%;
+  }
+
+  .custom-container {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}

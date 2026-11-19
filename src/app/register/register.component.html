@@ -1,0 +1,99 @@
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <form class="auth-form" (ngSubmit)="register(registerForm)" #registerForm="ngForm">
+
+    <h2>Register</h2>
+
+    <div class="form-group">
+      <label for="fullname">Fullname:</label>
+      <input
+        type="text"
+        id="fullname"
+        name="fullname"
+        [(ngModel)]="user.fullname"
+        required
+        placeholder="Enter your fullname"
+        #fullname="ngModel"
+      />
+      <div *ngIf="fullname.invalid && fullname.touched" class="error">
+        Fullname is required. Please enter your full name.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        [(ngModel)]="user.username"
+        required
+        placeholder="Enter your username"
+        #username="ngModel"
+      />
+      <div *ngIf="username.invalid && username.touched" class="error">
+        Username is required. Please enter a username.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="user.email"
+        required
+        pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+        placeholder="Enter your Gmail address"
+        #email="ngModel"
+      />
+      <div *ngIf="email.invalid && email.touched" class="error">
+        Email must be a valid Gmail address (example&#64;gmail.com).
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password:</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="user.password"
+        required
+        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>\/?]).{6,}$"
+        placeholder="Enter your password"
+        #password="ngModel"
+      />
+      <div *ngIf="password.invalid && password.touched" class="error">
+        Password must be at least 6 characters and include letters, numbers, and special characters.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phone">Phone:</label>
+      <input
+        type="text"
+        id="phone"
+        name="phone"
+        [(ngModel)]="user.phone"
+        required
+        placeholder="Enter your phone number"
+        #phone="ngModel"
+      />
+      <div *ngIf="phone.invalid && phone.touched" class="error">
+        Phone number is required. Please enter your phone number.
+      </div>
+    </div>
+
+    <button type="submit" class="register-btn">
+      Register
+    </button>
+
+    <div class="login-link">
+      <p>
+        Already have an account?
+        <a href="/login" >Login here</a>
+      </p>
+    </div>
+  </form>
+</div>

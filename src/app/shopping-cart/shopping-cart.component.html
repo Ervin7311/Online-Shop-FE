@@ -1,0 +1,209 @@
+<!-- <section class="h-100 width-100%">
+  <div class="container h-100 py-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-10">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-normal mb-0">Shopping Cart</h3>
+          <div>
+            <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">name <i
+                  class="fas fa-angle-down mt-1"></i></a></p>
+          </div>
+        </div>
+
+        <div class="card rounded-3 mb-4">
+          <div *ngFor="let item of cartItems" class="card-body p-4">
+            <div class="row d-flex justify-content-between align-items-center">
+              <div class="col-md-2 col-lg-2 col-xl-2">
+                <img [src]="item.product.imageUrl" class="img-fluid rounded-3" alt="Cotton T-shirt">
+              </div>
+              <div class="col-md-3 col-lg-3 col-xl-3">
+                <p class="lead fw-normal mb-2">{{item.product.name}}</p>
+                <div class="offset-lg-1">
+                  <h5 class="mb-0">{{item.product.price | customCurrency }}
+                  </h5>
+                </div>
+              </div>
+              <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                  onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                  <i class="fas fa-minus"></i>
+                </button>
+
+                <input id="form1" min="0" name="quantity" value="1" type="number"
+                  class="form-control form-control-sm" />
+
+                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                  onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                <h5 class="mb-0">{{item.product.price | customCurrency}}</h5>
+              </div>
+              <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                <a class="text-danger" (click)="removeFromCard(item.id)">
+                  <i class="fas fa-trash fa-lg"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        @if(cartItems.length != 0){
+        <div class="card">
+          <div class="card-body">
+            <button type="button" data-mdb-button-init data-mdb-ripple-init
+              class="btn btn-warning btn-block btn-lg">Proceed to Pay</button>
+          </div>
+        </div>
+        }@else {
+        <div class="no-item d-flex flex-column align-items-center justify-content-center">
+          <i class="fa-solid fa-cart-shopping fa-2xl mb-3"></i>
+          <span appDirectiveStyle>There is no item in the Shopping cart</span>
+        </div>
+        }
+     <div class="checkout-overlay" *ngIf="showCheckout">
+          <div class="checkout-modal">
+            <h4>Checkout</h4>
+            <form (ngSubmit)="submitOrder()">
+              <div class="form-group mb-3">
+                <label for="address">Shipping Address</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  [(ngModel)]="shippingAddress"
+                  name="address"
+                  required />
+              </div>
+
+              <div class="form-group mb-3">
+                <label for="payment">Payment Method</label>
+                <select
+                  class="form-control"
+                  id="payment"
+                  [(ngModel)]="paymentMethod"
+                  name="payment"
+                  required>
+                  <option value="CARD">Credit/Debit Card</option>
+                  <option value="CASH">Cash on Delivery</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn btn-success">Confirm Order</button>
+              <button type="button" class="btn btn-secondary ms-2" (click)="closeCheckoutModal()">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>  
+  </div>
+</section> -->
+
+<section class="h-100 width-100%">
+  <div class="container h-100 py-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-10">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-normal mb-0">Shopping Cart</h3>
+        </div>
+        <hr class="mb-4">
+
+        <div class="card rounded-3 mb-4" *ngFor="let item of cartItems">
+          <div class="card-body p-4">
+            <div class="row d-flex justify-content-between align-items-center">
+              <div class="col-md-2 col-lg-2 col-xl-2">
+                <img [src]="item.product.imageUrl" class="img-fluid rounded-3" alt="{{item.product.name}}">
+              </div>
+              <div class="col-md-3 col-lg-3 col-xl-3">
+                <p class="lead fw-normal mb-2">{{item.product.name}}</p>
+                <div class="offset-lg-1">
+                  <h5 class="mb-0">{{item.product.price | customCurrency}}</h5>
+                </div>
+              </div>
+              <div class="col-md-3 col-lg-3 col-xl-2 d-flex align-items-center">
+                <button class="btn btn-link px-2" (click)="decreaseQuantity(item)">
+                  <i class="fas fa-minus"></i>
+                </button>
+
+                <input
+                  min="1"
+                  name="quantity"
+                  [value]="item.quantity"
+                  type="number"
+                  class="form-control form-control-sm mx-1"
+                  (change)="onQuantityChange(item, $event)" />
+
+
+                <button class="btn btn-link px-2" (click)="increaseQuantity(item)">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                <h5 class="mb-0">{{(item.product.price * item.quantity) | customCurrency}}</h5>
+              </div>
+              <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                <a class="text-danger" (click)="removeFromCard(item.id)">
+                  <i class="fas fa-trash fa-lg"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="cartItems.length > 0; else emptyCart" class="card">
+          <div class="card-body text-end">
+            <button type="button" class="btn btn-warning btn-lg" (click)="openCheckoutModal()">
+              Proceed to Pay
+            </button>
+          </div>
+        </div>
+
+        <ng-template #emptyCart>
+          <div class="no-item d-flex flex-column align-items-center justify-content-center">
+            <i class="fa-solid fa-cart-shopping fa-2xl mb-3"></i>
+            <span appDirectiveStyle>There is no item in the Shopping cart</span>
+          </div>
+        </ng-template>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="checkout-overlay" *ngIf="showCheckout">
+    <div class="checkout-modal">
+      <h4 class="mb-3">Checkout</h4>
+      <form (ngSubmit)="submitOrder()">
+        <div class="form-group mb-3">
+          <label for="address">Shipping Address</label>
+          <input
+            type="text"
+            class="form-control"
+            id="address"
+            [(ngModel)]="shippingAddress"
+            name="address"
+            required />
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="payment">Payment Method</label>
+          <select
+            class="form-control"
+            id="payment"
+            [(ngModel)]="paymentMethod"
+            name="payment"
+            required>
+            <option value="CARD">Credit/Debit Card</option>
+            <option value="CASH">Cash on Delivery</option>
+          </select>
+        </div>
+
+        <div class="text-end">
+          <button type="submit" class="btn btn-success">Confirm Order</button>
+          <button type="button" class="btn btn-secondary ms-2" (click)="closeCheckoutModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

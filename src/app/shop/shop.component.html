@@ -1,0 +1,13 @@
+<div class="container">
+  <div class="row card-wrapper">
+    <div *ngIf="isAllCartItemsUnsold()" class="alert alert-info text-center my-4" style="background-color: #ffe6e6; color: #333;"  appDirectiveStyle>
+      Looks like it's quiet here... <br> Products have been sold yet. Be the first to make a move and grab your favorite
+      item!
+    </div>
+    @for (item of products; track item.id) {
+    <app-card [id]="item.id" [imageUrl]="item.imageUrl" [name]="item.name" [description]="item.description"
+      [price]="item.price" [isSold]="item.isSold" (productToFavoriteEmit)="logFavData($event)"
+      (productToCardEmit)="logCardData($event)"> </app-card>
+    }
+  </div>
+</div>

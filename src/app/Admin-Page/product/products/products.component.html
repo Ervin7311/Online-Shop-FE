@@ -1,0 +1,74 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="mb-0 text-black">Product List</h2>
+    <button class="btn btn-warning" (click)="toggleAddForm()">
+      {{ showAddForm ? 'Cancel' : 'Add Product' }}
+    </button>
+  </div>
+
+  <!-- Add Product Form -->
+  <div *ngIf="showAddForm" class="card shadow-sm mb-4 border-warning">
+    <div class="card-header bg-dark text-white">
+      <h5 class="mb-0">Add New Product</h5>
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="addProduct()" class="row g-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label">Name</label>
+          <input [(ngModel)]="newProduct.name" name="name" id="name" required class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label for="price" class="form-label">Price</label>
+          <input type="number" [(ngModel)]="newProduct.price" name="price" id="price" required class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label for="description" class="form-label">Description</label>
+          <input [(ngModel)]="newProduct.description" name="description" id="description" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+          <label for="stockQuantity" class="form-label">Stock Quantity</label>
+          <input type="number" [(ngModel)]="newProduct.stockQuantity" name="stockQuantity" id="stockQuantity" required class="form-control" />
+        </div>
+
+        <div class="col-12">
+          <label for="imageUrl" class="form-label">Image URL</label>
+          <input [(ngModel)]="newProduct.imageUrl" name="imageUrl" id="imageUrl" class="form-control" />
+        </div>
+
+        <div class="col-12 d-flex justify-content-end mt-3">
+          <button type="button" class="btn btn-warning btn-sm me-2" (click)="toggleAddForm()">Cancel</button>
+          <button type="submit" class="btn btn-success">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Product Table (shfaqet vetëm nëse nuk po shtohet produkti) -->
+  <div class="table-responsive" *ngIf="!showAddForm">
+    <table class="table table-striped table-bordered table-hover text-center align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products">
+          <td>{{ product.name }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.price | currency }}</td>
+          <td>{{ product.stockQuantity }}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id!)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

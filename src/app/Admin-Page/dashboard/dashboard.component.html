@@ -1,0 +1,167 @@
+<main class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <p class="eyebrow">ADMINISTRATION</p>
+      <h1>Dashboard</h1>
+      <p class="subtitle">An overview of your store's performance</p>
+    </div>
+    <div class="filters">
+      <label for="date-range">Date range</label>
+      <select id="date-range" [(ngModel)]="selectedRange" (ngModelChange)="onRangeChange()">
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+        <option value="90">Last 3 months</option>
+        <option value="180">Last 6 months</option>
+        <option value="custom">Custom range</option>
+      </select>
+      <div class="custom-dates" *ngIf="selectedRange === 'custom'">
+        <label>
+          <span>From</span>
+          <input type="date" [(ngModel)]="customStartDate" />
+        </label>
+        <label>
+          <span>To</span>
+          <input type="date" [(ngModel)]="customEndDate" />
+        </label>
+        <button type="button" class="apply-range" [disabled]="!customStartDate || !customEndDate || customRangeInvalid()" (click)="applyCustomRange()">Apply</button>
+      </div>
+      <span class="date-error" *ngIf="customRangeInvalid()">Start date must be on or before the end date.</span>
+    </div>
+  </header>
+
+  <div class="loading" *ngIf="loading" role="status">
+    <span class="spinner"></span>
+    <span>Loading dashboard data...</span>
+  </div>
+  <div class="error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</div>
+
+  <section class="stats-grid" aria-label="Store statistics">
+    <article class="stat-card products">
+      <div class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></div>
+      <div><p>Total Products</p><strong>{{ formatNullableNumber(summary['totalProducts']) }}</strong></div>
+    </article>
+    <article class="stat-card users">
+      <div class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20v-1.5a6.5 6.5 0 0 1 13 0V20zM16 5.2a3.5 3.5 0 0 1 0 6.6M18 14a5.5 5.5 0 0 1 3.5 5.1V20"/></svg></div>
+      <div><p>Total Users</p><strong>{{ formatNullableNumber(summary['totalUsers']) }}</strong></div>
+    </article>
+    <article class="stat-card orders">
+      <div class="stat-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/></svg></div>
+      <div><p>Total Orders</p><strong>{{ formatNullableNumber(summary['totalOrders']) }}</strong></div>
+    </article>
+    <article class="stat-card revenue">
+      <div class="stat-icon" aria-hidden="true">€</div>
+      <div><p>Total Revenue</p><strong>{{ summary['totalRevenue'] === null ? '—' : (summary['totalRevenue'] | currency:'EUR':'symbol':'1.0-2':'en-IE') }}</strong></div>
+    </article>
+  </section>
+
+  <section class="charts-grid" aria-label="Dashboard charts">
+    <article class="chart-card chart-wide">
+      <div class="chart-heading"><div><h2>Sales Overview</h2><p>Monthly revenue</p></div><span class="chart-mark teal"></span></div>
+      <div class="empty-state" *ngIf="!loading && !errorMessage && sales.length === 0">No sales data available for this period.</div>
+      <ng-container *ngIf="sales.length">
+        <div class="line-chart">
+          <div class="y-axis"><span>High</span><span>Mid</span><span>0</span></div>
+          <svg viewBox="0 0 1000 200" preserveAspectRatio="none" role="img" aria-label="Monthly revenue line chart">
+            <path class="grid-line" d="M0 24H1000 M0 102H1000 M0 180H1000"></path>
+            <polyline class="line teal-line" [attr.points]="linePoints(sales)"></polyline>
+            <circle *ngFor="let point of sales; let i = index" [attr.cx]="pointX(i, sales)" [attr.cy]="pointY(point, sales)" r="5" class="dot teal-dot">
+              <title>{{ point.label }}: {{ point.value | currency:'EUR':'symbol':'1.0-2':'en-IE' }}</title>
+            </circle>
+          </svg>
+        </div>
+        <div class="chart-labels"><span *ngFor="let item of sales">{{ item.label }}</span></div>
+      </ng-container>
+    </article>
+
+    <article class="chart-card chart-wide">
+      <div class="chart-heading"><div><h2>Orders Overview</h2><p>Orders by month</p></div><span class="chart-mark purple"></span></div>
+      <div class="empty-state" *ngIf="!loading && !errorMessage && orders.length === 0">No order data available for this period.</div>
+      <div class="bar-chart" *ngIf="orders.length">
+        <div class="bar-row" *ngFor="let item of orders" [title]="item.label + ': ' + formatNumber(item.value)">
+          <span class="bar-label">{{ item.label }}</span>
+          <div class="bar-track"><div class="bar-fill purple-fill" [style.width]="barWidth(item.value, orders)" [title]="formatNumber(item.value)"></div></div>
+          <strong>{{ item.value | number }}</strong>
+        </div>
+      </div>
+    </article>
+
+    <article class="chart-card chart-wide">
+      <div class="chart-heading"><div><h2>User Registrations</h2><p>New users by month</p></div><span class="chart-mark blue"></span></div>
+      <div class="empty-state" *ngIf="!loading && !errorMessage && registrations.length === 0">No registration data available for this period.</div>
+      <ng-container *ngIf="registrations.length">
+        <div class="line-chart">
+          <div class="y-axis"><span>High</span><span>Mid</span><span>0</span></div>
+          <svg viewBox="0 0 1000 200" preserveAspectRatio="none" role="img" aria-label="Monthly user registrations line chart">
+            <path class="grid-line" d="M0 24H1000 M0 102H1000 M0 180H1000"></path>
+            <polyline class="line blue-line" [attr.points]="linePoints(registrations)"></polyline>
+            <circle *ngFor="let point of registrations; let i = index" [attr.cx]="pointX(i, registrations)" [attr.cy]="pointY(point, registrations)" r="5" class="dot blue-dot">
+              <title>{{ point.label }}: {{ point.value | number }}</title>
+            </circle>
+          </svg>
+        </div>
+        <div class="chart-labels"><span *ngFor="let item of registrations">{{ item.label }}</span></div>
+      </ng-container>
+    </article>
+
+    <article class="chart-card">
+      <div class="chart-heading"><div><h2>Product Stock</h2><p>Inventory health</p></div></div>
+      <div class="empty-state" *ngIf="!loading && !errorMessage && stock.length === 0">No stock data available.</div>
+      <div class="pie-layout" *ngIf="stock.length">
+        <div class="pie" [style.background]="pieGradient(stock)" role="img" aria-label="Product stock distribution"></div>
+        <ul class="legend"><li *ngFor="let item of stock; let i = index" [title]="item.label + ': ' + formatNumber(item.value)"><span [style.background]="pieColors[i % pieColors.length]"></span>{{ item.label }} <b>{{ item.value | number }}</b></li></ul>
+      </div>
+    </article>
+
+    <article class="chart-card">
+      <div class="chart-heading"><div><h2>Top Favorite Products</h2><p>Most favorited products</p></div></div>
+      <div class="empty-state" *ngIf="!loading && !errorMessage && favorites.length === 0">No favorite product data available.</div>
+      <div class="bar-chart favorites-chart" *ngIf="favorites.length">
+        <div class="bar-row" *ngFor="let item of favorites | slice:0:5" [title]="item.label + ': ' + formatNumber(item.value)">
+          <span class="bar-label product-label" [title]="item.label">{{ item.label }}</span>
+          <div class="bar-track"><div class="bar-fill orange-fill" [style.width]="barWidth(item.value, favorites)" [title]="formatNumber(item.value)"></div></div>
+          <strong>{{ item.value | number }}</strong>
+        </div>
+      </div>
+    </article>
+
+    <article class="chart-card chart-wide">
+      <div class="roles-dashboard">
+        <section class="users-panel" aria-label="Users and administrators">
+          <div class="chart-heading">
+            <div><h2>Users &amp; Admins</h2><p>{{ filteredUsers.length }} accounts</p></div>
+            <label class="user-role-filter">
+              <span class="visually-hidden">Filter users by role</span>
+              <select [(ngModel)]="selectedUserRole" aria-label="Filter users by role">
+                <option value="ALL">All</option>
+                <option value="USER">Users</option>
+                <option value="ADMIN">Admins</option>
+              </select>
+            </label>
+          </div>
+          <div class="empty-state" *ngIf="usersLoading" role="status">Loading users...</div>
+          <div class="users-error" *ngIf="usersError" role="alert">{{ usersError }}</div>
+          <div class="empty-state" *ngIf="!usersLoading && !usersError && filteredUsers.length === 0">No users found.</div>
+          <ul class="user-list" *ngIf="!usersLoading && !usersError && filteredUsers.length">
+            <li class="user-row" *ngFor="let user of filteredUsers">
+              <span class="user-avatar" aria-hidden="true">{{ user.fullName.charAt(0) }}</span>
+              <span class="user-details">
+                <strong>{{ user.fullName }}</strong>
+                <span>{{ user.email }}</span>
+              </span>
+              <span class="user-role" [class.admin]="user.role.toUpperCase() === 'ADMIN'">{{ user.role }}</span>
+            </li>
+          </ul>
+        </section>
+
+        <section class="role-chart-panel" aria-label="User role distribution">
+          <div class="chart-heading"><div><h2>User Roles</h2><p>Account distribution</p></div></div>
+          <div class="empty-state" *ngIf="!loading && !errorMessage && roles.length === 0">No user role data available.</div>
+          <div class="pie-layout" *ngIf="roles.length">
+            <div class="pie" [style.background]="pieGradient(roles)" role="img" aria-label="User roles distribution"></div>
+            <ul class="legend"><li *ngFor="let item of roles; let i = index" [title]="item.label + ': ' + formatNumber(item.value)"><span [style.background]="pieColors[i % pieColors.length]"></span>{{ item.label }} <b>{{ item.value | number }}</b></li></ul>
+          </div>
+        </section>
+      </div>
+    </article>
+  </section>
+</main>
